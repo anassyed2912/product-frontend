@@ -26,6 +26,7 @@ export default function App() {
   const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
+  const API_BASE = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -42,7 +43,7 @@ export default function App() {
       const token = localStorage.getItem("token");
 
       const resp = await axios.post<ProductData>(
-        "http://localhost:4000/api/products",
+        `${API_BASE}/api/products`,
         payload,
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -64,7 +65,7 @@ export default function App() {
   ) => {
     try {
       setLoading(true);
-      const resp = await axios.post("http://localhost:5000/generate-questions", {
+      const resp = await axios.post(`${API_BASE}/generate-questions`, {
         productName: name,
         category,
         attributes: saved?.attributes || {},
@@ -108,7 +109,7 @@ export default function App() {
       setLoading(true);
       const token = localStorage.getItem("token");
       const scoreResp = await axios.post<{ product: ProductData; score: number }>(
-        `http://localhost:4000/api/products/${saved._id}/score`,
+        `${API_BASE}/api/products/${saved._id}/score`,
         finalAnswers,
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -315,7 +316,7 @@ export default function App() {
                   try {
                     const token = localStorage.getItem("token");
                     const response = await axios.get(
-                      `http://localhost:4000/api/products/${saved._id}/report`,
+                      `${API_BASE}/api/products/${saved._id}/report`,
                       {
                         headers: { Authorization: `Bearer ${token}` },
                         responseType: "blob",
@@ -417,23 +418,23 @@ const styles: { [key: string]: React.CSSProperties } = {
   productCategory: { fontSize: "14px", color: "#6b7280", background: "#e5e7eb", padding: "4px 12px", borderRadius: "6px" },
   questionCard: { marginBottom: "24px" },
   questionText: { fontSize: "18px", fontWeight: 500, color: "#111827", marginBottom: "16px", lineHeight: "1.6" },
-  textarea: { width: "100%", padding: "16px", borderRadius: "12px", border: "2px solid #e5e7eb", fontSize: "15px", lineHeight: "1.6", resize: "vertical", outline: "none", transition: "all 0.3s ease", marginBottom: "16px", fontFamily: "inherit" },
-  completionCard: { textAlign: "center", padding: "40px 20px" },
-  checkmark: { width: "80px", height: "80px", borderRadius: "50%", background: "linear-gradient(135deg, #10b981 0%, #059669 100%)", color: "white", fontSize: "48px", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 20px", boxShadow: "0 8px 20px rgba(16,185,129,0.3)" },
+  textarea: { width: "100%", padding: "16px", borderRadius: "12px", border: "2px solid #e5e7eb", fontSize: "15px", lineHeight: "1.6", resize: "vertical", outline: "none" },
+  completionCard: { textAlign: "center", padding: "40px 0" },
+  checkmark: { fontSize: "64px", color: "#10b981", marginBottom: "16px" },
   completionText: { fontSize: "20px", fontWeight: 600, color: "#111827", marginBottom: "24px" },
-  progressBar: { height: "8px", background: "#e5e7eb", borderRadius: "4px", overflow: "hidden", marginTop: "32px" },
-  progressFill: { height: "100%", background: "linear-gradient(90deg, #667eea 0%, #764ba2 100%)", borderRadius: "4px", transition: "width 0.5s ease" },
-  scoreCard: { textAlign: "center", padding: "40px 20px", marginBottom: "32px" },
-  scoreCircle: { position: "relative", width: "200px", height: "200px", margin: "0 auto 24px" },
-  scoreSvg: { width: "100%", height: "100%" },
-  scoreValue: { position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)", fontSize: "48px", fontWeight: 700, color: "#111827" },
-  scoreLabel: { fontSize: "24px", fontWeight: 600, color: "#111827", marginBottom: "8px" },
-  scoreDescription: { fontSize: "16px", color: "#6b7280" },
-  actionButtons: { display: "flex", gap: "12px", flexDirection: "column" },
-  downloadBtn: { background: "linear-gradient(135deg, #10b981 0%, #059669 100%)", color: "white", border: "none", borderRadius: "12px", padding: "16px 32px", fontSize: "16px", fontWeight: 600, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: "12px", transition: "all 0.3s ease", boxShadow: "0 4px 15px rgba(16,185,129,0.4)" },
-  secondaryBtn: { background: "transparent", color: "#667eea", border: "2px solid #667eea", borderRadius: "12px", padding: "16px 32px", fontSize: "16px", fontWeight: 600, cursor: "pointer", transition: "all 0.3s ease" },
-  loadingScreen: { display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", minHeight: "100vh", background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)", color: "white" },
-  loadingSpinner: { width: "60px", height: "60px", border: "4px solid rgba(255, 255, 255, 0.3)", borderTop: "4px solid white", borderRadius: "50%", animation: "spin 1s linear infinite", marginBottom: "24px" },
-  loadingTitle: { fontSize: "28px", fontWeight: 600, marginBottom: "8px" },
+  progressBar: { height: "10px", background: "#e5e7eb", borderRadius: "10px", overflow: "hidden" },
+  progressFill: { height: "100%", background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)", transition: "width 0.5s ease" },
+  scoreCard: { textAlign: "center", marginBottom: "40px" },
+  scoreCircle: { position: "relative", width: "120px", height: "120px", margin: "0 auto 16px" },
+  scoreSvg: { width: "120px", height: "120px" },
+  scoreValue: { position: "absolute", top: "50%", left: "50%", transform: "translate(-50%,-50%)", fontSize: "28px", fontWeight: 700, color: "#111827" },
+  scoreLabel: { fontSize: "18px", fontWeight: 600, color: "#111827", marginBottom: "8px" },
+  scoreDescription: { fontSize: "14px", color: "#6b7280" },
+  actionButtons: { display: "flex", flexDirection: "column", gap: "16px", alignItems: "center" },
+  downloadBtn: { background: "linear-gradient(135deg, #10b981 0%, #34d399 100%)", color: "white", border: "none", borderRadius: "12px", padding: "16px 32px", fontSize: "16px", fontWeight: 600, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: "12px", transition: "all 0.3s ease", boxShadow: "0 4px 15px rgba(16,185,129,0.4)" },
+  secondaryBtn: { background: "white", color: "#111827", border: "2px solid #e5e7eb", borderRadius: "12px", padding: "14px 32px", fontSize: "15px", fontWeight: 500, cursor: "pointer", transition: "all 0.3s ease" },
+  loadingScreen: { display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", minHeight: "100vh", background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)", color: "white", textAlign: "center", animation: "fadeIn 1s ease" },
+  loadingSpinner: { width: "60px", height: "60px", border: "6px solid rgba(255,255,255,0.3)", borderTop: "6px solid white", borderRadius: "50%", animation: "spin 1s linear infinite", marginBottom: "24px" },
+  loadingTitle: { fontSize: "28px", fontWeight: 700, marginBottom: "8px" },
   loadingText: { fontSize: "16px", opacity: 0.8 },
 };
